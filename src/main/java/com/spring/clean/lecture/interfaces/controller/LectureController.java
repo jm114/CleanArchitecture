@@ -77,7 +77,7 @@ public class LectureController {
      */
     @GetMapping("/lists")
     public ResponseEntity<List<Lecture>> lectures(LectureRequest request){
-        List<Lecture> lectures = lecture.availableLecture(request.getUserId());
+        List<Lecture> lectures = lecture.availableLecture(Enrollment.toDomain(request));
 
         if (lectures.isEmpty()) {
             throw new NoAvailableLecturesException("신청 가능한 특강이 없습니다");

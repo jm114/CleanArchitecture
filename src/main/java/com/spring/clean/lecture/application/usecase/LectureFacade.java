@@ -21,11 +21,11 @@ public class LectureFacade {
     public Enrollment applyLecture(Enrollment applyInfo) {
 
         //신청 가능한지 체크. 신청가능한 목록 조회
-        List<Lecture> list = lectureService.availableList(applyInfo.getUserId());
+        //List<Lecture> list = lectureService.availableList(applyInfo);
 
-        if(list.isEmpty()){
-            throw new NoAvailableLecturesException("신청가능한 특강이 없습니다.");
-        }
+        //if(list.isEmpty()){
+        //    throw new NoAvailableLecturesException("신청가능한 특강이 없습니다.");
+        //}
 
         //신청가능한 특강이 있으면 신청
         Enrollment enrolled = lectureService.enroll(applyInfo);
@@ -44,8 +44,8 @@ public class LectureFacade {
     /**
      * 날짜별 신청 가능한 특강 목록
      */
-    public List<Lecture> availableLecture(long userId){
-        return lectureService.availableList(userId);
+    public List<Lecture> availableLecture(Enrollment applyInfo){
+        return lectureService.availableListByUser(applyInfo);
     }
 
 

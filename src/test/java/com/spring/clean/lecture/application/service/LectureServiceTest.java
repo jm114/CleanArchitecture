@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,7 +46,7 @@ class LectureServiceTest {
                 .enrollId(1L)
                 .lectureId(lectureId)
                 .userId(userId)
-                .applyTime(Timestamp.valueOf(LocalDate.now().atStartOfDay()))
+                .applyTime(LocalDateTime.now())
                 .build();
 
         when(lectureRepository.updateCapacity(lectureId)).thenReturn(29); // 30명 중 29명 신청된 상태
@@ -72,7 +73,7 @@ class LectureServiceTest {
                 .enrollId(1L)
                 .lectureId(lectureId)
                 .userId(userId)
-                .applyTime(Timestamp.valueOf(LocalDate.now().atStartOfDay()))
+                .applyTime(LocalDateTime.now())
                 .build();
 
         when(enrollmentRepository.getAppliedStatus(enrollment)).thenReturn(enrollment);
@@ -92,7 +93,7 @@ class LectureServiceTest {
                 .enrollId(1L)
                 .lectureId(lectureId)
                 .userId(userId)
-                .applyTime(Timestamp.valueOf(LocalDate.now().atStartOfDay()))
+                .applyTime(LocalDateTime.now())
                 .build();
 
         when(enrollmentRepository.save(enrollment)).thenReturn(enrollment);
@@ -112,7 +113,7 @@ class LectureServiceTest {
                 .enrollId(1L)
                 .lectureId(1L)
                 .userId(1L)
-                .applyTime(Timestamp.valueOf(LocalDate.now().atStartOfDay()))
+                .applyTime(LocalDateTime.now())
                 .build();
 
         when(enrollmentRepository.getAppliedStatus(enrollment)).thenReturn(enrollment);
@@ -127,16 +128,23 @@ class LectureServiceTest {
     @Test
     void test5() {
         long userId = 1L;
+        Enrollment enrollment = Enrollment.builder()
+                .enrollId(1L)
+                .lectureId(1L)
+                .userId(userId)
+                .applyTime(LocalDateTime.now())
+                .build();
+
         Lecture lecture = Lecture.builder()
                 .lectureId(1L)
                 .courseId(1L)
                 .capacity(30)
-                .lectureDate(Timestamp.valueOf(LocalDate.now().atStartOfDay()))
+                .lectureDt(LocalDateTime.now())
                 .build();
 
-        when(lectureRepository.getAvailableLectures(userId, LocalDate.now())).thenReturn(Collections.singletonList(lecture));
+        when(lectureRepository.getAvailableLectures(enrollment)).thenReturn(Collections.singletonList(lecture));
 
-        List<Lecture> result = lectureService.availableList(userId);
+        List<Lecture> result = lectureService.availableList(enrollment);
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -152,7 +160,7 @@ class LectureServiceTest {
                 .enrollId(1L)
                 .lectureId(1L)
                 .userId(userId)
-                .applyTime(Timestamp.valueOf(LocalDate.now().atStartOfDay()))
+                .applyTime(LocalDateTime.now())
                 .build();
 
         when(enrollmentRepository.getEnrolledLectures(userId)).thenReturn(Collections.singletonList(enrollment));

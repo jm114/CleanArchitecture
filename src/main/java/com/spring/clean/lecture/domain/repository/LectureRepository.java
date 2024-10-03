@@ -16,6 +16,7 @@ public interface LectureRepository {
     int updateCapacity(Long lecutreId);
 
     //2. userId로 신청가능한 특강 조회
-    List<Lecture> getAvailableLectures(Long userId, LocalDateTime today);
+    List<Lecture> getAvailableLectures(Enrollment applyInfo);
 
+    List<Lecture> getAvailableLecturesByUser(Enrollment applyInfo);
 }
