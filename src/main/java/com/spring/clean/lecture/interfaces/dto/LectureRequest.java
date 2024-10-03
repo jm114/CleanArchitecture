@@ -2,11 +2,11 @@ package com.spring.clean.lecture.interfaces.dto;
 
 import lombok.Getter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 public class LectureRequest {
     private long userId;
     private long lectureId;
-    private Timestamp applyTime;
+    private LocalDateTime applyTime;
 }
