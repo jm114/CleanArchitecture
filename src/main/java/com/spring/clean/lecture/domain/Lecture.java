@@ -12,14 +12,14 @@ import java.sql.Timestamp;
 @Builder
 public class Lecture {
     private long lectureId;
-    private long CourseId;
+    private long courseId;
     private int capacity;
     private Timestamp lectureDate;  //수강일
 
     public static Lecture toDomain(LectureEntity entity){
         return Lecture.builder()
                 .lectureId(entity.getId())
-                .CourseId(entity.getCourse().getId())
+                .courseId(entity.getCourse().getId())
                 .capacity(entity.getCapacity())
                 .lectureDate(entity.getLectureDt())
                 .build();
