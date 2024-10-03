@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -14,16 +15,26 @@ public class Lecture {
     private long lectureId;
     private long courseId;
     private int capacity;
-    private Timestamp lectureDate;  //수강일
+    private LocalDateTime lectureDt;  //수강일
 
     public static Lecture toDomain(LectureEntity entity){
         return Lecture.builder()
                 .lectureId(entity.getId())
-                .courseId(entity.getCourse().getId())
+                .courseId(entity.getCourseId())
                 .capacity(entity.getCapacity())
-                .lectureDate(entity.getLectureDt())
+                .lectureDt(entity.getLectureDt())
                 .build();
 
+    }
+
+    @Override
+    public String toString() {
+        return "Lecture{" +
+                "lectureId=" + lectureId +
+                ", courseId=" + courseId +
+                ", capacity=" + capacity +
+                ", lectureDate=" + lectureDt +
+                '}';
     }
 
 }

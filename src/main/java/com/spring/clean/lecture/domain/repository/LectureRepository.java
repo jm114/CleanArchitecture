@@ -1,9 +1,11 @@
 package com.spring.clean.lecture.domain.repository;
 
+import com.spring.clean.lecture.domain.Enrollment;
 import com.spring.clean.lecture.domain.Lecture;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -14,6 +16,6 @@ public interface LectureRepository {
     int updateCapacity(Long lecutreId);
 
     //2. userId로 신청가능한 특강 조회
-    List<Lecture> getAvailableLectures(Long userId, LocalDate today);
+    List<Lecture> getAvailableLectures(Long userId, LocalDateTime today);
 
 }

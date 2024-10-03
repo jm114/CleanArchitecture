@@ -1,11 +1,13 @@
 package com.spring.clean.lecture.domain;
 
+import com.spring.clean.lecture.infrastructure.entity.CourseEntity;
 import com.spring.clean.lecture.infrastructure.entity.EnrollmentEntity;
 import com.spring.clean.lecture.interfaces.dto.LectureRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -14,15 +16,13 @@ public class Enrollment {
     private long enrollId;
     private long lectureId;
     private long userId;
-    private String title;
-    private String teacher;
-    private Timestamp applyTime;
+    private LocalDateTime applyTime;
 
     public static Enrollment toDomain(EnrollmentEntity entity){
         return Enrollment.builder()
                 .enrollId(entity.getId())
-                .lectureId(entity.getLecture().getId())
-                .userId(entity.getUser().getId())
+                .lectureId(entity.getLectureId())
+                .userId(entity.getUserId())
                 .applyTime(entity.getApplyTime())
                 .build();
     }
@@ -31,19 +31,9 @@ public class Enrollment {
         return Enrollment.builder()
                 .lectureId(request.getLectureId())
                 .userId(request.getUserId())
-                .applyTime(request.getApplyTime())
+                .applyTime(request.getApplyTime().toLocalDateTime())
                 .build();
     }
 
-    public static Enrollment toDomainWithCourse(EnrollmentEntity entity){
-        return Enrollment.builder()
-                .enrollId(entity.getId())
-                .lectureId(entity.getLecture().getId())
-                .userId(entity.getUser().getId())
-                .applyTime(entity.getApplyTime())
-                .title(entity.getLecture().getCourse().getTitle())
-                .teacher(entity.getLecture().getCourse().getTeacher())
-                .build();
-    }
 
 }

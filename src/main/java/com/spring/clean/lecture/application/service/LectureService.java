@@ -5,12 +5,16 @@ import com.spring.clean.lecture.domain.Lecture;
 import com.spring.clean.lecture.domain.repository.EnrollmentRepository;
 import com.spring.clean.lecture.domain.repository.LectureRepository;
 import com.spring.clean.lecture.exception.EnrollmentException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +46,7 @@ public class LectureService {
     }
 
     public List<Lecture> availableList(long userId) {
-        return lectureRepository.getAvailableLectures(userId, LocalDate.now());
+        return lectureRepository.getAvailableLectures(userId, LocalDateTime.now());
     }
 
     public List<Enrollment> enrolledList(long userId) {

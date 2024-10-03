@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -22,27 +22,20 @@ public class EnrollmentEntity {
     private long id;
 
     @Column(nullable = false)
-    private Timestamp applyTime;
+    private LocalDateTime applyTime;
 
-    @ManyToOne
-    @JoinColumn(name = "lecture_id")
-    private LectureEntity lecture;
+    @Column(nullable = false)
+    private long lectureId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @Column(nullable = false)
+    private long userId;
 
 
     public static EnrollmentEntity toEntity(Enrollment enrollInfo) {
-        LectureEntity lectureEntity = new LectureEntity();
-        lectureEntity.setId(enrollInfo.getLectureId());
-
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(enrollInfo.getUserId());
 
         return EnrollmentEntity.builder()
-                .lecture(lectureEntity)
-                .user(userEntity)
+                .lectureId(enrollInfo.getLectureId())
+                .userId(enrollInfo.getUserId())
                 .applyTime(enrollInfo.getApplyTime())
                 .build();
     }

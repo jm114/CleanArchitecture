@@ -26,7 +26,5 @@ public class CourseEntity {
     @Column(nullable = false)
     private String teacher;
 
-    @OneToMany(mappedBy = "course")  // course 필드에 의해 매핑됨
-    private List<LectureEntity> lectures;
 
 }

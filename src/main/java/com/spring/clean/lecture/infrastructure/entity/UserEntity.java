@@ -23,6 +23,4 @@ public class UserEntity {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "user")
-    private List<EnrollmentEntity> enrollments;
 }

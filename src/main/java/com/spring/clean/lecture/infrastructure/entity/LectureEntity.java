@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,16 +23,13 @@ public class LectureEntity {
     private long id;
 
     @Column(nullable = false)
-    private Timestamp lectureDt;
+    private LocalDateTime lectureDt;
 
     @Column(nullable = false)
     private int capacity;
 
-    @ManyToOne(fetch = FetchType.LAZY)  // 강좌와 특강은 다대일 관계
-    @JoinColumn(name = "course_id")
-    private CourseEntity course;
+    @Column(nullable = false)
+    private long courseId;
 
-    @OneToMany(mappedBy = "lecture")
-    private List<EnrollmentEntity> enrollments;
 
 }

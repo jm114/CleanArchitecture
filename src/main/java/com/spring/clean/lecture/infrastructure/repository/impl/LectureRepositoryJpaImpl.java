@@ -10,6 +10,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,18 +37,22 @@ public class LectureRepositoryJpaImpl implements LectureRepository {
     }
 
     @Override
-    public List<Lecture> getAvailableLectures(Long userId, LocalDate today) {
-        String jpql = "SELECT L FROM Lecture L WHERE NOT EXISTS (" +
-                        "SELECT 1 FROM Enrollment E WHERE L.id = E.lectureId " +
-                        "AND E.userId = :userId " +
-                        "AND E.capacity = 0 " +
-                        "and L.lecture_dt <> :today)";
+    public List<Lecture> getAvailableLectures(Long userId, LocalDateTime today) {
+        String jpql = "SELECT L FROM LectureEntity L " +
+                        "WHERE NOT EXISTS (SELECT 1 FROM EnrollmentEntity E " +
+                                                    "WHERE (E.lectureId = L.id AND E.userId = :userId) " +
+                                                    "OR L.capacity = 30 " +
+                                                    "OR L.lectureDt < :today)";
 
-        return entityManager.createQuery(jpql, LectureEntity.class)
+        List<LectureEntity> result = entityManager.createQuery(jpql, LectureEntity.class)
                 .setParameter("userId", userId)
                 .setParameter("today", today)
-                .getResultList()
-                .stream()
+                .getResultList();
+
+        // 결과를 콘솔에 출력
+        System.out.println("Available Lectures: " + result);
+
+        return result.stream()
                 .map(Lecture::toDomain)
                 .collect(Collectors.toList());
     }

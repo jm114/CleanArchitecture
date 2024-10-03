@@ -1,9 +1,11 @@
 package com.spring.clean.lecture.domain.repository;
 
 import com.spring.clean.lecture.domain.Enrollment;
+import com.spring.clean.lecture.domain.Lecture;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface EnrollmentRepository {

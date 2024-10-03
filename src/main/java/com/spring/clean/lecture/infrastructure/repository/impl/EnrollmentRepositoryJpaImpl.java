@@ -7,6 +7,7 @@ import com.spring.clean.lecture.infrastructure.repository.EnrollmentJpaRepositor
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
@@ -28,7 +29,7 @@ public class EnrollmentRepositoryJpaImpl implements EnrollmentRepository {
     public List<Enrollment> getEnrolledLectures(Long userId) {
         List<EnrollmentEntity> result = jpaRepository.findByUserId(userId);
         return result.stream()
-                .map(Enrollment::toDomainWithCourse)
+                .map(Enrollment::toDomain)
                 .collect(Collectors.toList());
     }
 
