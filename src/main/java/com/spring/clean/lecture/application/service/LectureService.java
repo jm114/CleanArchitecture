@@ -27,7 +27,8 @@ public class LectureService {
     public Enrollment enroll(Enrollment applyInfo) {
 
         if(isApplied(applyInfo)!=null){
-            throw new EnrollmentException("이미 신청한 강의입니다.");
+            //throw new EnrollmentException("이미 신청한 강의입니다.");
+            return null;
         }
 
         Enrollment enrolled = enrollmentRepository.save(applyInfo); //수강 신청
@@ -35,7 +36,8 @@ public class LectureService {
         int currentCapacity = lectureRepository.updateCapacity(enrolled.getLectureId());  //허용인원 변경
 
         if(currentCapacity==30){
-            throw new  EnrollmentException("정원이 마감되었습니다.");
+            //throw new  EnrollmentException("정원이 마감되었습니다.");
+            return null;
         }
 
         return enrolled;
@@ -45,8 +47,12 @@ public class LectureService {
         return enrollmentRepository.getAppliedStatus(applyInfo);
     }
 
-    public List<Lecture> availableList(long userId) {
-        return lectureRepository.getAvailableLectures(userId, LocalDateTime.now());
+    public List<Lecture> availableList(Enrollment applyInfo) {
+        return lectureRepository.getAvailableLectures(applyInfo);
+    }
+
+    public List<Lecture> availableListByUser(Enrollment applyInfo) {
+        return lectureRepository.getAvailableLecturesByUser(applyInfo);
     }
 
     public List<Enrollment> enrolledList(long userId) {

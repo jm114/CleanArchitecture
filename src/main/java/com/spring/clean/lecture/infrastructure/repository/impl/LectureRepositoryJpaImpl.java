@@ -1,5 +1,6 @@
 package com.spring.clean.lecture.infrastructure.repository.impl;
 
+import com.spring.clean.lecture.domain.Enrollment;
 import com.spring.clean.lecture.domain.Lecture;
 import com.spring.clean.lecture.domain.repository.LectureRepository;
 import com.spring.clean.lecture.infrastructure.entity.LectureEntity;
@@ -9,8 +10,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,17 +35,19 @@ public class LectureRepositoryJpaImpl implements LectureRepository {
         return lectureEntity.getCapacity();
     }
 
+
     @Override
-    public List<Lecture> getAvailableLectures(Long userId, LocalDateTime today) {
+    public List<Lecture> getAvailableLectures(Enrollment applyInfo) {
         String jpql = "SELECT L FROM LectureEntity L " +
-                        "WHERE NOT EXISTS (SELECT 1 FROM EnrollmentEntity E " +
-                                                    "WHERE (E.lectureId = L.id AND E.userId = :userId) " +
-                                                    "OR L.capacity = 30 " +
-                                                    "OR L.lectureDt < :today)";
+                "WHERE NOT EXISTS (SELECT 1 FROM EnrollmentEntity E " +
+                "WHERE (E.lectureId = :lectureId AND E.userId = :userId) " +
+                "OR L.capacity = 30 " +
+                "OR L.lectureDt < :today)";
 
         List<LectureEntity> result = entityManager.createQuery(jpql, LectureEntity.class)
-                .setParameter("userId", userId)
-                .setParameter("today", today)
+                .setParameter("userId", applyInfo.getUserId())
+                .setParameter("today", applyInfo.getApplyTime())
+                .setParameter("lectureId", applyInfo.getLectureId())
                 .getResultList();
 
         // 결과를 콘솔에 출력
@@ -56,6 +57,29 @@ public class LectureRepositoryJpaImpl implements LectureRepository {
                 .map(Lecture::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Lecture> getAvailableLecturesByUser(Enrollment applyInfo) {
+        String jpql = "SELECT L FROM LectureEntity L " +
+                        "WHERE NOT EXISTS (SELECT 1 FROM EnrollmentEntity E " +
+                                                    "WHERE (E.lectureId = L.id AND E.userId = :userId) " +
+                                                    "OR L.capacity = 30 " +
+                                                    "OR L.lectureDt < :today)";
+
+        List<LectureEntity> result = entityManager.createQuery(jpql, LectureEntity.class)
+                .setParameter("userId", applyInfo.getUserId())
+                .setParameter("today", applyInfo.getApplyTime())
+                .getResultList();
+
+        // 결과를 콘솔에 출력
+        System.out.println("Available Lectures: " + result);
+
+        return result.stream()
+                .map(Lecture::toDomain)
+                .collect(Collectors.toList());
+    }
+
+
 
 
 }

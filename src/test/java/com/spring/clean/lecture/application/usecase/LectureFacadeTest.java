@@ -2,7 +2,6 @@ package com.spring.clean.lecture.application.usecase;
 
 import com.spring.clean.lecture.domain.Enrollment;
 import com.spring.clean.lecture.exception.EnrollmentException;
-import com.spring.clean.lecture.infrastructure.entity.UserEntity;
 import com.spring.clean.lecture.infrastructure.repository.EnrollmentJpaRepository;
 import com.spring.clean.lecture.infrastructure.repository.UserJpaRepository;
 import jakarta.transaction.Transactional;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,7 +43,7 @@ class LectureFacadeTest {
         int totalApplicants = 40;
         List<Enrollment> enrollments = new ArrayList<>();
         CountDownLatch latch = new CountDownLatch(totalApplicants);
-        ExecutorService executorService = Executors.newFixedThreadPool(1); // 10개의 스레드 풀
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
 
         for (int i = 0; i < totalApplicants; i++) {
             Enrollment enrollment = Enrollment.builder()
@@ -75,4 +73,38 @@ class LectureFacadeTest {
     }
 
 
+    @Test
+    void 사용자별_중복신청_금지_테스트() throws InterruptedException {
+        int totalApplicants = 5;
+        List<Enrollment> enrolls = new ArrayList<>();
+        CountDownLatch latch = new CountDownLatch(totalApplicants);
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+        for (int i = 0; i < totalApplicants; i++) {
+            Enrollment enrollment = Enrollment.builder()
+                    .lectureId(2L)
+                    .userId(1145L)
+                    .applyTime(LocalDateTime.now())
+                    .build();
+
+            executorService.submit(() -> {
+                try {
+                    Enrollment result = lectureFacade.applyLecture(enrollment);
+                    if (result != null) {
+                        enrolls.add(result);
+                    }
+                } catch (EnrollmentException e) {
+                    // 실패한 신청은 무시
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+        executorService.shutdown();
+
+        assertThat(enrolls.size()).isEqualTo(1);
+        assertThat(enrollmentJpaRepository.count()).isEqualTo(1);
+    }
 }
